@@ -105,3 +105,51 @@ choco install adobereader -y --force
 ```
 ."C:\Program Files\Dell\CommandUpdate\dcu-cli.exe" /applyUpdates -updateSeverity=recommended -outputLog=C:\Temp\dell_command.log
 ```
+
+**Disable News & Interts**
+```
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 00000000 /f
+```
+**Remove Search bar**
+```
+reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search /v SearchboxTaskbarMode /t REG_DWORD /d 00000000 /f
+```
+**Re-name workstation w/ prompt**
+```
+$newpc = Read-Host -Prompt 'Input new PC-NAME LOC#-DT/LT-ROLE/USER';Rename-Computer -NewName "$newpc" -Force
+```
+
+Copy file & Set background image win10
+```
+# In order to get this  working, set the  execution policy
+## Set-ExecutionPolicy RemoteSigned 
+#setup items
+New-Item -path "c:\scripts\deploy\" -ItemType "directory" -force
+
+#copy files
+$source_dir =  "\\1.3.3.7\public\deploy\background.jpg"
+$dest_dir = "c:\scripts\deploy\"
+$filepath = "c:\scripts\deploy\background.jpg"
+Copy-Item -Path $source_dir -Destination $dest_dir -Force
+
+#SETTING THE WALLPAPER
+$setwallpapersrc = @"
+using System.Runtime.InteropServices;
+
+public class Wallpaper
+{
+  public const int SetDesktopWallpaper = 20;
+  public const int UpdateIniFile = 0x01;
+  public const int SendWinIniChange = 0x02;
+  [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+  private static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+  public static void SetWallpaper(string path)
+  {
+    SystemParametersInfo(SetDesktopWallpaper, 0, path, UpdateIniFile | SendWinIniChange);
+  }
+}
+"@
+Add-Type -TypeDefinition $setwallpapersrc
+
+[Wallpaper]::SetWallpaper("$filepath")
+```
