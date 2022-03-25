@@ -6,7 +6,79 @@ Replace "Mail" with
 $appname = "Mail"
  ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq $appname}).Verbs() | ?{$_.Name.replace('&','') -match 'Unpin from taskbar'} | %{$_.DoIt(); $exec = $true}
  ```
- 
+**Removing Windows apps**
+```
+Get-AppxPackage *skypeapp* | Remove-AppxPackage
+Get-AppxPackage *Spofity* | Remove-AppxPackage
+```
+Additional package names
+https://www.majorgeeks.com/content/page/remove_windows_10_apps_using_powershell.html
+```
+Get-AppxPackage *Microsoft.3dbuilder* | Remove-AppxPackage
+Get-AppxPackage *AdobeSystemsIncorporated.AdobePhotoshopExpress* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.WindowsAlarms* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Asphalt8Airborne* | Remove-AppxPackage
+Get-AppxPackage *microsoft.windowscommunicationsapps* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.WindowsCamera* | Remove-AppxPackage
+Get-AppxPackage *king.com.CandyCrushSodaSaga* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.DrawboardPDF* | Remove-AppxPackage
+Get-AppxPackage *Facebook* | Remove-AppxPackage
+Get-AppxPackage *BethesdaSoftworks.FalloutShelter* | Remove-AppxPackage
+Get-AppxPackage *FarmVille2CountryEscape* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.GetHelp* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Getstarted* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.ZuneMusic* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.WindowsMaps* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Messaging* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Wallet* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage
+Get-AppxPackage *Todos* | Remove-AppxPackage
+Get-AppxPackage *ConnectivityStore* | Remove-AppxPackage
+Get-AppxPackage *MinecraftUWP* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.OneConnect* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.BingFinance* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.ZuneVideo* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.BingNews* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage
+Get-AppxPackage *Netflix* | Remove-AppxPackage
+Get-AppxPackage *OneNote* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.MSPaint* | Remove-AppxPackage
+Get-AppxPackage *PandoraMediaInc* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.People* | Remove-AppxPackage
+Get-AppxPackage *CommsPhone* | Remove-AppxPackage
+Get-AppxPackage *windowsphone* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Print3D* | Remove-AppxPackage
+Get-AppxPackage *flaregamesGmbH.RoyalRevolt2* | Remove-AppxPackage
+Get-AppxPackage *WindowsScan* | Remove-AppxPackage
+Get-AppxPackage *AutodeskSketchBook* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.SkypeApp* | Remove-AppxPackage
+Get-AppxPackage *bingsports* | Remove-AppxPackage
+Get-AppxPackage *Office.Sway* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Getstarted* | Remove-AppxPackage
+Get-AppxPackage *Twitter* | Remove-AppxPackage
+Get-AppxPackage *Microsoft3DViewer* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.BingWeather* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.XboxApp* | Remove-AppxPackage
+Get-AppxPackage *XboxOneSmartGlass* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.XboxSpeechToTextOverlay* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.XboxIdentityProvider* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage
+```
+Use an array for each loop
+```
+$AppList = @(
+    "*Microsoft.Getstarted*"
+    "*Twitter*"
+    "*Spofity*"
+)
+
+foreach ($App in $AppList) {
+    Get-AppxPackage -Name $App | Remove-AppxPackage -ErrorAction SilentlyContinue
+}
+```
+
 **CHOCO Software Installs**
 
 Template - https://gist.github.com/ferventcoder/1fd9a9a005079e20875d
