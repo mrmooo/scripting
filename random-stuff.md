@@ -7,10 +7,6 @@ $appname = "Mail"
  ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq $appname}).Verbs() | ?{$_.Name.replace('&','') -match 'Unpin from taskbar'} | %{$_.DoIt(); $exec = $true}
  ```
 **Removing Windows apps**
-```
-Get-AppxPackage *skypeapp* | Remove-AppxPackage
-Get-AppxPackage *Spofity* | Remove-AppxPackage
-```
 Additional package names
 https://www.majorgeeks.com/content/page/remove_windows_10_apps_using_powershell.html
 ```
