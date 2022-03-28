@@ -69,14 +69,32 @@ Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage
 Use an array for each loop
 ```
 $AppList = @(
-    "*Microsoft.Getstarted*"
-    "*Twitter*"
-    "*Spofity*"
+ "*Skype*"
+ "*Spotify*"
+ "*Disney*"
+ "*Microsoft.ZuneVideo*"
+	"*officehub*"
+	"*windowsphone*"
+	"*windowsmaps*"
+	"*windowscommunicationsapps*"
+	"*Microsoft.Messaging*"
+	"*bingweather*"
+	"*solitairecollection*"
+	"*bingnews*"
 )
 
 foreach ($App in $AppList) {
     Get-AppxPackage -Name $App | Remove-AppxPackage -ErrorAction SilentlyContinue
 }
+```
+**Pull list of apps to TXT:**
+```
+Get-AppxPackage > C:\temp\apps.txt
+```
+
+**Pull specific apps in window:**
+```
+get-appxpackage | findstr Microsof
 ```
 
 **CHOCO Software Installs**
