@@ -1,4 +1,4 @@
-**Unpin Microsoft Store**
+ # Unpin Microsoft Store # 
 Replace "Mail" with
 - Microsoft Store
 - Spotify
@@ -6,7 +6,7 @@ Replace "Mail" with
 $appname = "Mail"
  ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq $appname}).Verbs() | ?{$_.Name.replace('&','') -match 'Unpin from taskbar'} | %{$_.DoIt(); $exec = $true}
  ```
-**Removing Windows apps**
+ # Removing Windows apps # 
 Additional package names
 https://www.majorgeeks.com/content/page/remove_windows_10_apps_using_powershell.html
 ```
@@ -83,17 +83,17 @@ foreach ($App in $AppList) {
     Get-AppxPackage -Name $App | Remove-AppxPackage -ErrorAction SilentlyContinue
 }
 ```
-**Pull list of apps to TXT:**
+ # Pull list of apps to TXT: # 
 ```
 Get-AppxPackage > C:\temp\apps.txt
 ```
 
-**Pull specific apps in window:**
+ # Pull specific apps in window: # 
 ```
 get-appxpackage | findstr Microsof
 ```
 
-**CHOCO Software Installs**
+ # CHOCO Software Installs # 
 
 Template - https://gist.github.com/ferventcoder/1fd9a9a005079e20875d
 
@@ -115,25 +115,25 @@ choco install microsoft-teams.install -y --force
 choco install adobereader -y --force
 ```
 
-**Dell Command utility updates (recommended)**
+ # Dell Command utility updates (recommended) # 
 ```
 ."C:\Program Files\Dell\CommandUpdate\dcu-cli.exe" /applyUpdates -updateSeverity=recommended -outputLog=C:\Temp\dell_command.log
 ```
 
-**Disable News & Interts**
+ # Disable News & Interts # 
 ```
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 00000000 /f
 ```
-**Remove Search bar**
+ # Remove Search bar # 
 ```
 reg add HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search /v SearchboxTaskbarMode /t REG_DWORD /d 00000000 /f
 ```
-**Re-name workstation w/ prompt**
+ # Re-name workstation w/ prompt # 
 ```
 $newpc = Read-Host -Prompt 'Input new PC-NAME LOC#-DT/LT-ROLE/USER';Rename-Computer -NewName "$newpc" -Force
 ```
 
-Copy file & Set background image win10
+ # Copy file & Set background image win10 #
 ```
 # In order to get this  working, set the  execution policy
 ## Set-ExecutionPolicy RemoteSigned 
