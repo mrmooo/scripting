@@ -10,9 +10,10 @@ $helperExe = 'C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe'; if (Te
     # If the helper.exe file does not exist, display a message
     Write-Output "The file '$helperExe' was not found. Looks like Thunderbird isn't moo-ving anywhere."
 }
-
-# Uninstall for BATCH (single like) #
+```
+# Uninstall Thunderbird for BATCH (single like) #
 IF EXIST "C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe" (START "" "C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe" /S) ELSE (ECHO Thunderbird is not Installed)
+```
 ```
 # OneDrive Uninstall (save as ps1) #
 ```
