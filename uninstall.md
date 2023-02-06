@@ -12,14 +12,46 @@ $helperExe = 'C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe'; if (Te
 }
 ```
 # Uninstall Thunderbird for BATCH (single like) #
+```
 IF EXIST "C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe" (START "" "C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe" /S) ELSE (ECHO Thunderbird is not Installed)
 ```
+# Thunderbird Detection Script intune #
 ```
+try{
+    $helperExe = 'C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe'
+    if (Test-Path $helperExe) {
+        Write-Output "Thunderbird is installed. Exit code 1"
+        exit 1
+    } else {
+        Write-Output "Thunderbird is not installed. Exit code 0"
+        exit 0
+    }
+}
+catch{
+    $errMsg = $_.Exception.Message
+    write-host $errMsg
+    exit 2
+}
+```
+# Thunderbird Remediation Script intune #
+```
+try{
+    $helperExe = 'C:\Program Files\Mozilla Thunderbird\uninstall\helper.exe'
+    Start-Process -FilePath $helperExe -ArgumentList '/S' -Wait
+    exit 0
+}
+catch{
+    $errMsg = $_.Exception.Message
+    write-host $errMsg
+    exit 1
+}
+```
+
+
 # OneDrive Uninstall (save as ps1) #
 ```
 # Terminate any OneDrive processes
 taskkill /f /im OneDrive.exe
-
 # Uninstall OneDrive
 if ([Environment]::Is64BitOperatingSystem) {
     %SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall
