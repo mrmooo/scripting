@@ -46,19 +46,36 @@ catch{
     exit 1
 }
 ```
-
-
-# OneDrive Uninstall (save as ps1) #
+# OneDrive Uninstall (Intune Detection Script) #
 ```
-# Terminate any OneDrive processes
-taskkill /f /im OneDrive.exe
-# Uninstall OneDrive
-if ([Environment]::Is64BitOperatingSystem) {
-    %SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall
+$OneDrivePath = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
+if (Test-Path $OneDrivePath) {
+    Write-Output "OneDrive is installed."
+    exit 1
 } else {
-    %SystemRoot%\System32\OneDriveSetup.exe /uninstall
+    Write-Output "OneDrive is not installed."
+    exit 0
 }
+```
 
-# Moo-ve on with your day
-Write-Output "OneDrive has been un-herd from this device. Time to moo-ve on to better things!"
+# OneDrive Uninstall (Intune Remediation Script) #
+```
+# Kill OneDrive process
+Stop-Process -Name OneDrive -Force -ErrorAction SilentlyContinue
+
+# Uninstall OneDrive
+$OneDriveSetup = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
+if (Test-Path $OneDriveSetup) {
+    Start-Process $OneDriveSetup -ArgumentList "/uninstall" -NoNewWindow -Wait
+    if ($LASTEXITCODE -eq 0) {
+        Write-Output "OneDrive uninstalled successfully."
+        exit 0
+    } else {
+        Write-Output "Error uninstalling OneDrive. Exit code: $LASTEXITCODE"
+        exit $LASTEXITCODE
+    }
+} else {
+    Write-Output "OneDrive is not installed."
+    exit 1
+}
 ```
