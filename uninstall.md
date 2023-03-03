@@ -74,8 +74,5 @@ if (Test-Path $OneDriveSetup) {
         Write-Output "Error uninstalling OneDrive. Exit code: $LASTEXITCODE"
         exit $LASTEXITCODE
     }
-} else {
-    Write-Output "OneDrive is not installed."
-    exit 1
 }
 ```
