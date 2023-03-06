@@ -48,12 +48,14 @@ catch{
 ```
 # OneDrive Uninstall (Intune Detection Script) #
 ```
-$OneDrivePath = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
-if (Test-Path $OneDrivePath) {
-    Write-Output "OneDrive is installed."
-    exit 1
-} else {
-    Write-Output "OneDrive is not installed."
+if (Test-Path -LiteralPath "C:\Users\user\AppData\Local\Microsoft\OneDrive\OneDrive.exe") 
+{
+   write-host "Installed - Onedrive"
+   exit 1
+}
+else
+{
+    write-host "NOT installed - Onedrive"
     exit 0
 }
 ```
@@ -67,12 +69,192 @@ Stop-Process -Name OneDrive -Force -ErrorAction SilentlyContinue
 $OneDriveSetup = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
 if (Test-Path $OneDriveSetup) {
     Start-Process $OneDriveSetup -ArgumentList "/uninstall" -NoNewWindow -Wait
-    if ($LASTEXITCODE -eq 0) {
+    $exitCode = $?
+    Write-Output "Uninstall OneDrive Exit code: $exitCode"
+    if ($exitCode -eq $true) {
         Write-Output "OneDrive uninstalled successfully."
         exit 0
     } else {
-        Write-Output "Error uninstalling OneDrive. Exit code: $LASTEXITCODE"
-        exit $LASTEXITCODE
+        Write-Output "Error uninstalling OneDrive. Exit code: $exitCode"
+        exit 1
     }
 }
 ```
+# App Uninstall (Intune Detection Script) #
+```
+#Detect built-in applications not needed for organisation devices
+
+try
+{
+    # List of Applications to Remove
+    $AppPackages  = @()
+	$AppPackages += "*facebook*"
+	$AppPackages += "Microsoft.Xbox.TCUI"
+	$AppPackages += "Microsoft.XboxApp"
+	$AppPackages += "Microsoft.XboxGamingOverlay"
+	$AppPackages += "Microsoft.XboxIdentityProvider"
+	$AppPackages += "Microsoft.XboxSpeechToTextOverlay"
+	$AppPackages += "Microsoft.GamingApp"
+	$AppPackages += "Microsoft.SkypeApp"
+	$AppPackages += "MicrosoftTeams"
+	$AppPackages += "Microsoft.ZuneMusic"
+	$AppPackages += "Microsoft.ZuneVideo"
+	$AppPackages += "Microsoft.WindowsFeedbackHub"
+	$AppPackages += "Microsoft.BingNews"
+	$AppPackages += "Microsoft.BingWeather"
+	$AppPackages += "Microsoft.MicrosoftSolitaireCollection"
+	$AppPackages += "Microsoft.WindowsMaps"
+	$AppPackages += "Microsoft.GetStarted"
+	$AppPackages += "Microsoft.People"
+	$AppPackages += "Microsoft.windowscommunicationsapps"
+	$AppPackages += "Microsoft.Messaging"
+	$AppPackages += "Microsoft.MixedReality.Portal"
+	$AppPackages += "Microsoft.YourPhone"
+	$AppPackages += "Microsoft.Wallet"
+	$AppPackages += "Microsoft.GetHelp"
+	$AppPackages += "Microsoft.BingFinance"
+	$AppPackages += "Dell.Optimizer"
+	$AppPackages += "DellInc.DellDigitalDelivery"
+	$AppPackages += "Microsoft.RemoteDesktop"
+	$AppPackages += "*Skype*"
+	$AppPackages += "*Spotify*"
+	$AppPackages += "*Disney*"
+	$AppPackages += "*Microsoft.Bing*"
+	$AppPackages += "*Microsoft.ZuneVideo*"
+	$AppPackages += "*officehub*"
+	$AppPackages += "*windowsphone*"
+	$AppPackages += "*windowsmaps*"
+	$AppPackages += "*windowscommunicationsapps*"
+	$AppPackages += "*Microsoft.Messaging*"
+	$AppPackages += "*bingweather*"
+	$AppPackages += "*solitairecollection*"
+	$AppPackages += "*Microsoft.Asphalt8Airborne*"
+	$AppPackages += "*king.com.CandyCrushSodaSaga*"
+	$AppPackages += "*Microsoft.BingFinance*"
+	$AppPackages += "*Netflix*"
+	$AppPackages += "*Twitter*"
+	$AppPackages += "*Candy*"
+	$AppPackages += "*LinkedIn*"
+	$AppPackages += "*Dell.Optimizer*"
+	$AppPackages += "*DellInc.DellOptimizer*"
+	$AppPackages += "*DellInc.DellDigitalDelivery*"
+	$AppPackages += "*Promo*"
+	$AppPackages += "*OneNote*"
+	
+    $Error.Clear()
+    $found = $false
+    foreach ($App In $AppPackages) 
+    {
+        $Package = Get-AppxPackage -allusers | Where-Object {$_.Name -like $App}
+        $ProvisionedPackage = Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -like $App}
+        If ($null -ne $Package) {
+            Write-Host "App Found: $($Package.Name). Start remediation script."
+            $found = $true
+        } Else {
+            Write-Host "Package $App not found."
+        }
+        If ($null -ne $ProvisionedPackage) {
+            Write-Host "Provisioned App Found: $($ProvisionedPackage.DisplayName). Start remediation script."
+            $found = $true
+        } Else {
+            Write-Host "Provisioned Package $App not found."
+        }
+    }
+	
+    If ($found) 
+    {
+        exit 1
+    }
+	Else {
+		exit 0
+	}
+} 
+catch
+{
+    $errMsg = $_.Exception.Message
+    Write-Error $errMsg
+    exit 1
+}
+```
+# App Uninstall (Intune Remediation Script) #
+```
+#Uninstalls built-in applications not needed for organisation devices
+
+# List of Applications to Remove
+$AppPackages  = @()
+	$AppPackages += "*facebook*"
+	$AppPackages += "Microsoft.Xbox.TCUI"
+	$AppPackages += "Microsoft.XboxApp"
+	$AppPackages += "Microsoft.XboxGamingOverlay"
+	$AppPackages += "Microsoft.XboxIdentityProvider"
+	$AppPackages += "Microsoft.XboxSpeechToTextOverlay"
+	$AppPackages += "Microsoft.GamingApp"
+	$AppPackages += "Microsoft.SkypeApp"
+	$AppPackages += "MicrosoftTeams"
+	$AppPackages += "Microsoft.ZuneMusic"
+	$AppPackages += "Microsoft.ZuneVideo"
+	$AppPackages += "Microsoft.WindowsFeedbackHub"
+	$AppPackages += "Microsoft.BingNews"
+	$AppPackages += "Microsoft.BingWeather"
+	$AppPackages += "Microsoft.MicrosoftSolitaireCollection"
+	$AppPackages += "Microsoft.WindowsMaps"
+	$AppPackages += "Microsoft.GetStarted"
+	$AppPackages += "Microsoft.People"
+	$AppPackages += "Microsoft.windowscommunicationsapps"
+	$AppPackages += "Microsoft.Messaging"
+	$AppPackages += "Microsoft.MixedReality.Portal"
+	$AppPackages += "Microsoft.YourPhone"
+	$AppPackages += "Microsoft.Wallet"
+	$AppPackages += "Microsoft.GetHelp"
+	$AppPackages += "Microsoft.BingFinance"
+	$AppPackages += "Dell.Optimizer"
+	$AppPackages += "DellInc.DellDigitalDelivery"
+	$AppPackages += "Microsoft.RemoteDesktop"
+	$AppPackages += "*Skype*"
+	$AppPackages += "*Spotify*"
+	$AppPackages += "*Disney*"
+	$AppPackages += "*Microsoft.Bing*"
+	$AppPackages += "*Microsoft.ZuneVideo*"
+	$AppPackages += "*officehub*"
+	$AppPackages += "*windowsphone*"
+	$AppPackages += "*windowsmaps*"
+	$AppPackages += "*windowscommunicationsapps*"
+	$AppPackages += "*Microsoft.Messaging*"
+	$AppPackages += "*bingweather*"
+	$AppPackages += "*solitairecollection*"
+	$AppPackages += "*Microsoft.Asphalt8Airborne*"
+	$AppPackages += "*king.com.CandyCrushSodaSaga*"
+	$AppPackages += "*Microsoft.BingFinance*"
+	$AppPackages += "*Netflix*"
+	$AppPackages += "*Twitter*"
+	$AppPackages += "*Candy*"
+	$AppPackages += "*LinkedIn*"
+	$AppPackages += "*Dell.Optimizer*"
+	$AppPackages += "*DellInc.DellOptimizer*"
+	$AppPackages += "*DellInc.DellDigitalDelivery*"
+	$AppPackages += "*Promo*"
+	$AppPackages += "*OneNote*"
+$Error.Clear()
+foreach ($App In $AppPackages) {
+
+    $Package = Get-AppxPackage -allusers | Where-Object {$_.Name -like $App}
+	$ProvisionedPackage = Get-AppxProvisionedPackage -allusers -Online | Where-Object {$_.DisplayName -like $App}
+	
+    If ($Package -ne $null) {
+        Write-Host "Removing Package : $App"
+        Remove-AppxPackage -allusers -Package $Package.PackageFullName
+    } 
+	Else {
+		Write-Host "Package $App not found"
+	}
+
+	If ($ProvisionedPackage -ne $null) {
+		Write-Host "Removing ProvisionedPackage : $App"
+		Remove-AppxProvisionedPackage -allusers -online -Packagename $ProvisionedPackage.Packagename
+	} 
+	Else {
+		Write-Host "Provisioned Package $App not found"
+	}
+}
+```
+
